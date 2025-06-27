@@ -72,13 +72,80 @@ The server will start and listen for MCP protocol messages via stdio.
 ## Integration
 
 ### With Cursor AI
-Add this MCP server to your Cursor configuration.
+
+Add this MCP server to your Cursor configuration file at `~/.cursor/mcp.json`:
+
+```json
+{
+  "mcpServers": {
+    "google-calendar": {
+      "command": "/usr/local/bin/node", 
+      "args": ["/absolute/path/to/your/mcp-google-calendar/index.js"],
+      "env": {
+        "GOOGLE_CLIENT_ID": "your-google-client-id-here",
+        "GOOGLE_CLIENT_SECRET": "your-google-client-secret-here",
+        "GOOGLE_REFRESH_TOKEN": "your-refresh-token-here"
+      }
+    }
+  }
+}
+```
+
+**Important**: 
+- Replace `/absolute/path/to/your/mcp-google-calendar/index.js` with the absolute path to your `index.js` file
+- Replace the credential placeholders with your actual Google OAuth credentials
+- Restart Cursor completely after making configuration changes
 
 ### With Claude Desktop
 Configure the MCP connection in Claude Desktop settings.
 
 ### With n8n
 Use this server as an MCP node in your n8n workflows.
+
+## MCP Configuration Structure
+
+The MCP server requires three environment variables that can be configured in two ways:
+
+### Option 1: MCP Configuration (Recommended)
+Include credentials directly in the MCP configuration:
+
+```json
+{
+  "mcpServers": {
+    "google-calendar": {
+      "command": "/usr/local/bin/node",
+      "args": ["/absolute/path/to/index.js"],
+      "env": {
+        "GOOGLE_CLIENT_ID": "your-client-id",
+        "GOOGLE_CLIENT_SECRET": "your-client-secret",
+        "GOOGLE_REFRESH_TOKEN": "your-refresh-token"
+      }
+    }
+  }
+}
+```
+
+### Option 2: Environment File
+Create a `.env` file in the same directory as `index.js` and specify the working directory:
+
+```json
+{
+  "mcpServers": {
+    "google-calendar": {
+      "command": "/usr/local/bin/node",
+      "args": ["index.js"],
+      "cwd": "/absolute/path/to/mcp-directory"
+    }
+  }
+}
+```
+
+With `.env` file containing:
+```env
+GOOGLE_CLIENT_ID=your-client-id
+GOOGLE_CLIENT_SECRET=your-client-secret
+GOOGLE_REFRESH_TOKEN=your-refresh-token
+```
 
 ## Security
 
